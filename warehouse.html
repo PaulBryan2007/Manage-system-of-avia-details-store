@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Список запчастей{% endblock %}
+
+{% block body %}
+<h2 class="text-center mb-4">📋 Список всех запчастей на складе</h2>
+
+{% if articles %}
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Артикул</th>
+            <th>Количество</th>
+            <th>Ячейка</th>
+            <th>Частичное удаление</th>
+            <th>Полное удаление</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.id }}</td>
+            <td><strong>{{ article.name }}</strong></td>
+            <td>{{ article.article }}</td>
+            <td>
+                <span class="badge {% if article.quantity >= max_capacity %}bg-danger{% else %}bg-primary{% endif %}">
+                    {{ article.quantity }} шт.
+                </span>
+            </td>
+            <td><span class="badge bg-info">{{ article.cell }}</span></td>
+            
+            <td>
+                <form method="post" action="/delete_partial/{{ article.id }}" class="d-flex gap-2" 
+                      onsubmit="return confirm('Точно удалить указанное количество?')">
+                    <input type="number" name="quantity_to_remove" class="form-control form-control-sm" 
+                           style="width: 80px;" min="1" max="{{ article.quantity }}" 
+                           placeholder="шт." required>
+                    <button type="submit" class="btn btn-warning btn-sm">
+                        🔧 Удалить часть
+                    </button>
+                </form>
+            </td>
+            
+            <td>
+                <a href="/delete/{{ article.id }}" class="btn btn-danger btn-sm" 
+                   onclick="return confirm('Удалить ВСЮ запчасть {{ article.name }} ({{ article.quantity }} шт.)?')">
+                    🗑️ Удалить всё
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="card mt-4">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">📊 Статистика склада</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <p><strong>📦 Всего запчастей:</strong> {{ articles|length }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>🔢 Общее количество:</strong> 
+                    {{ articles|sum(attribute='quantity') }} шт.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>🏭 Занято ячеек:</strong>
+                    {% set occupied = articles|map(attribute='cell')|unique|list|length %}
+                    {{ occupied }}/9
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="alert alert-warning text-center">
+    📭 Склад пуст. <a href="/" class="alert-link">Добавьте первую запчасть</a>
+</div>
+{% endif %}
+
+<div class="text-center mt-3">
+    <a href="/" class="btn btn-success">➕ Добавить новую запчасть</a>
+    <a href="/grid" class="btn btn-secondary">🗺️ Карта склада</a>
+    <a href="/clear_all" class="btn btn-danger" 
+       onclick="return confirm('⚠️ ВНИМАНИЕ! Это удалит ВСЕ запчасти со склада. Продолжить?')">
+        🧹 Очистить весь склад
+    </a>
+</div>
+{% endblock %}

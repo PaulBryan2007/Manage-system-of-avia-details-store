@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление на склад{% endblock %}
+
+{% block body %}
+<h2 class="text-center mb-4">📦 Размещение запчасти на склад</h2>
+<p class="text-center text-muted">Программа автоматически найдёт подходящую ячейку по приоритетам</p>
+
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label class="form-label">Название запчасти:</label>
+        <input type="text" name="name" class="form-control" placeholder="Например: Винт М6" required>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Артикул:</label>
+        <input type="text" name="article" class="form-control" placeholder="Например: ВИНТ-001" required>
+    </div>
+    
+    <div class="mb-3">
+        <label class="form-label">Количество (макс. {{ max_capacity }}):</label>
+        <input type="number" name="quantity" class="form-control" min="1" max="{{ max_capacity }}" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary w-100">🚀 Разместить автоматически</button>
+</form>
+
+<hr class="my-4">
+
+<h4>📊 Статус ячеек:</h4>
+<div class="row">
+    {% for cell in cells %}
+    <div class="col-md-2 col-sm-3 mb-2">
+        <div class="border rounded p-2 text-center {% if cell.quantity >= max_capacity %}bg-danger text-white{% elif cell.part_name %}bg-success text-white{% else %}bg-light{% endif %}">
+            <strong>{{ cell.name }}</strong><br>
+            {% if cell.part_name %}
+                <small>{{ cell.part_name }}</small><br>
+                <small>{{ cell.quantity }}/{{ max_capacity }}</small>
+            {% else %}
+                <small>⚡ Свободно</small>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="text-center mt-3">
+    <a href="/warehouse" class="btn btn-outline-secondary">📋 Список запчастей</a>
+    <a href="/grid" class="btn btn-outline-secondary">🗺️ Карта склада</a>
+</div>
+{% endblock %}

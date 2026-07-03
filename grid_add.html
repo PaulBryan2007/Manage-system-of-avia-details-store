@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Добавление на склад{% endblock %}
+{% block body %}
+<h2 class="text-center mb-4"> Размещение запчасти</h2>
+<p class="text-center text-muted">Программа сама найдёт свободную ячейку</p>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Название запчасти:</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Артикул:</label>
+        <input type="text" name="article" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Количество (макс. 10):</label>
+        <input type="number" name="quantity" class="form-control" min="1" max="10" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Разместить автоматически</button>
+</form>
+<div class="text-center mt-3">
+    <a href="/grid" class="btn btn-secondary">← Назад к карте</a>
+</div>
+{% endblock %}

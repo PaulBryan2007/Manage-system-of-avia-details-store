@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование{% endblock %}
+{% block body %}
+<h2 class="text-center mb-4">✏️ Редактирование запчасти</h2>
+<form method="post">
+    <div class="mb-3">
+        <label class="form-label">Название:</label>
+        <input type="text" name="name" class="form-control" value="{{ article.name }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Артикул:</label>
+        <input type="text" name="article" class="form-control" value="{{ article.article }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Количество:</label>
+        <input type="number" name="quantity" class="form-control" value="{{ article.quantity }}" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Ячейка:</label>
+        <input type="text" name="cell" class="form-control" value="{{ article.cell }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Сохранить изменения</button>
+</form>
+<div class="text-center mt-3">
+    <a href="/warehouse" class="btn btn-secondary">← Назад к списку</a>
+</div>
+{% endblock %}

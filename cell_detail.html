@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Ячейка {{ cell.name }}{% endblock %}
+
+{% block body %}
+<h2 class="text-center mb-4">📦 Содержимое ячейки {{ cell.name }}</h2>
+
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Статус ячейки</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>📊 Загруженность:</strong> {{ cell.quantity }}/{{ max_capacity }} шт. 
+                    ({{ "%.0f"|format(cell.quantity / max_capacity * 100) }}%)</p>
+                <div class="progress">
+                    <div class="progress-bar {% if cell.quantity >= max_capacity %}bg-danger{% else %}bg-success{% endif %}" 
+                         style="width: {{ cell.quantity / max_capacity * 100 }}%">
+                        {{ cell.quantity }}/{{ max_capacity }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <p><strong>🏷️ Основная запчасть:</strong> {{ cell.part_name or "Нет" }}</p>
+                <p><strong>🔢 Артикул:</strong> {{ cell.article or "Нет" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>📋 Все запчасти в этой ячейке:</h4>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Артикул</th>
+            <th>Количество</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.id }}</td>
+            <td><strong>{{ article.name }}</strong></td>
+            <td>{{ article.article }}</td>
+            <td>{{ article.quantity }} шт.</td>
+            <td>
+                <a href="/delete/{{ article.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Удалить?')">🗑️</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">Нет запчастей в этой ячейке</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="text-center mt-3">
+    <a href="/grid" class="btn btn-secondary">← Назад к карте склада</a>
+    <a href="/" class="btn btn-success">➕ Добавить запчасть</a>
+</div>
+{% endblock %}
